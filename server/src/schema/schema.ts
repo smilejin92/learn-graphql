@@ -7,7 +7,6 @@ import {
   GraphQLList,
   GraphQLNonNull,
 } from 'graphql';
-import _ from 'lodash';
 import Author from '../models/author';
 import Book from '../models/book';
 
