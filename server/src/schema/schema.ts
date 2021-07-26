@@ -5,6 +5,7 @@ import {
   GraphQLSchema,
   GraphQLString,
   GraphQLList,
+  GraphQLNonNull,
 } from 'graphql';
 import _ from 'lodash';
 import Author from '../models/author';
@@ -92,8 +93,9 @@ const Mutation = new GraphQLObjectType({
     addAuthor: {
       type: AuthorType,
       args: {
-        name: { type: GraphQLString },
-        age: { type: GraphQLInt },
+        // add constraint
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
       },
       resolve: (parent, args) => {
         const author = new Author({
@@ -107,9 +109,10 @@ const Mutation = new GraphQLObjectType({
     addBook: {
       type: BookType,
       args: {
-        name: { type: GraphQLString },
-        genre: { type: GraphQLString },
-        authorId: { type: GraphQLID },
+        // add constraint
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        genre: { type: new GraphQLNonNull(GraphQLString) },
+        authorId: { type: new GraphQLNonNull(GraphQLID) },
       },
       resolve: (parent, args) => {
         const book = new Book({
