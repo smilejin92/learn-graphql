@@ -1,20 +1,18 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import { MongoClient } from 'mongodb';
+import { connect } from 'mongoose';
 import schema from './schema/schema';
 
 const app = express();
 
 const { USER_ID, USER_PWD, DB_URL } = process.env;
 const uri = `mongodb+srv://${USER_ID}:${USER_PWD}@${DB_URL}`;
-const client = new MongoClient(uri);
+const connectOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 
-client.connect(err => {
-  // const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  console.log('connected to database');
-  client.close();
-});
+connect(uri, connectOptions).then(() => console.log('Connected to database'));
 
 // graphql middleware
 app.use(
