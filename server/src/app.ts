@@ -2,8 +2,14 @@ import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { connect } from 'mongoose';
 import schema from './schema/schema';
+import cors from 'cors';
 
 const app = express();
+app.use(
+  cors({
+    origin: '*',
+  }),
+);
 
 const { USER_ID, USER_PWD, DB_URL } = process.env;
 const uri = `mongodb+srv://${USER_ID}:${USER_PWD}@${DB_URL}`;
