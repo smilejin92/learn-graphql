@@ -8,6 +8,7 @@ import {
 } from 'graphql';
 import _ from 'lodash';
 import Author from '../models/author';
+import Book from '../models/book';
 
 // 1. define type
 // 2. define relationship between types
@@ -98,6 +99,23 @@ const Mutation = new GraphQLObjectType({
         });
 
         return author.save();
+      },
+    },
+    addBook: {
+      type: BookType,
+      args: {
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        authorId: { type: GraphQLID },
+      },
+      resolve: (parent, args) => {
+        const book = new Book({
+          name: args.name,
+          genre: args.genre,
+          authorId: args.authorId,
+        });
+
+        return book.save();
       },
     },
   },
