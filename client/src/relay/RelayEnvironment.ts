@@ -32,7 +32,6 @@ const fetchGraphQL = async (
 
 // Relay passes a "params" object with the query name and text. So we define a helper function
 // to call our fetchGraphQL utility with params.text.
-// @ts-ignore
 const fetchRelay: FetchFunction = async (params, variables) => {
   console.log(
     `fetching query ${params.name} with ${JSON.stringify(variables)}`,
