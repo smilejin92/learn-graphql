@@ -495,7 +495,32 @@ schema {
 
 &nbsp;  
 
+## 5. Scalar types
 
+* type of fields that don't have any sub-fields(the leaves of the query)
+* GraphQL's default scalar types
+  * `Int`: A signed 32-bit integer
+  * `Float`: A signed double-precision floating-point value
+  * `String`: A UTF-8 character sequence
+  * `Boolean`: `true` or `false`
+  * `ID`: a unique identifier, often used to refetch an object or as the key for a cache.
+
+&nbsp;  
+
+## 6. Enumeration types
+
+* a special kind of scalar that is **restricted to a particular set of allowed values.**
+* Validate that any arguments of this type are one of the allowed values
+
+```
+enum Episode {
+	NEWHOPE
+	EMPRIE
+	JEDI
+}
+```
+
+&nbsp;  
 
 
 
