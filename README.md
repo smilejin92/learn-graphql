@@ -7,12 +7,14 @@ GraphQL 서비스는 데이터의 타입과 필드, 그리고 필드에 접근 �
 
 &nbsp;  
 
+## Queries and Mutations
+
 ## 1. Fields
 
 *  the query has exactly the same shape as the result. you always get back what you expect, and the server knows exactly what fields the client is asking for.
 * the query is interactive - you can change it as you like and see the new result.
-* fields can also refer to Objects. In that case, you can make a *sub-selection* of fields for that object.
-* GraphQL queries can traverse related objects and their fields, letting clients fetch lots of related data in one request, instead of making several roundtrips as one would need in a classic REST architecture.
+* fields can also refer to Objects. In that case, you can make a ***sub-selection*** of fields for that object.
+* GraphQL **queries can traverse related objects and their fields, letting clients fetch lots of related data in one request**, instead of making several roundtrips as one would need in a classic REST architecture.
 
 ```
 // gql
@@ -417,4 +419,101 @@ query HeroForEpisodes($ep: Episode!) {
   }
 }
 ```
+
+&nbsp;  
+
+## Schemas and Types
+
+## 1. Type System
+
+* What fields can we select? What kinds of objects might they return? What fields are available on those sub-objects? That's where the schema comes in.
+* Every GraphQL service defines a set of types which completely describe the set of possible data you can query on that service. Then, when queries come in, they are validated and executed against that schema.
+* **GraphQL schema language** - it's similar to the query language, and allows us to talk about GraphQL schemas in a language-agnostic way.
+
+&nbsp;  
+
+## 2. Object types and fields
+
+* Object types
+  * The most basic components of a GraphQL schema
+  * represent a kind of object you can fetch from your service, and what fields it has.
+
+```
+type Charater {
+	name: String!
+	appearsIn: [Episode!]!
+}
+```
+
+* `Character`: *GraphQL Object Type*, a type with some fields(`name`, `appearsIn`).
+* `name`, `appearsIn`: `Character` 타입의 필드. only fields that can appear in any part of a GraphQL query that operates on the `Character` type.
+* `String`: one of the built-in **scalar types**.
+  * scalar types: types that resolve to a single scalar object, and can't have sub-selections in the query.
+* `String!`: non-nullable field. GraphQL service promises to always give you a value when you query this field.
+* `[Episode!]!`: an array of `Episode` Object.  Since it is also *non-nullable*, you can always expect an array (with zero or more items) when you query the `appearsIn` field.
+  * since `Episode!` is also *non-nullable*, you can always expect every item of the array to be an `Episode` object.
+
+&nbsp;  
+
+## 3. Arguments
+
+* Every field on a GraphQL object type can have zero or more arguments
+* All arguments are named.
+* Arguments can be either required or optional. When an argument is optional, we can define a *default value*
+
+```
+type Starship {
+  id: ID!
+  name: String!
+  length(unit: LengthUnit = METER): Float
+}
+```
+
+&nbsp;  
+
+## 4. Query and Mutation types
+
+* there are two types that are special within a schema: `query`, `mutation`
+* Every GraphQL service has a `query` type and may or may not have a `mutation` type. They define the **entry point** of every GraphQL query
+* other than the special status of being the "entry point" into the schema, the `Query` and `Mutation` types are **the same as any other GraphQL object type**, and their fields work exactly the same way.
+
+```
+type Query {
+	hero(episode: Episode): Character
+	droid(id: ID!): Droid
+}
+
+type Mutation {
+	# ...
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+}
+```
+
+&nbsp;  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
