@@ -522,23 +522,107 @@ enum Episode {
 
 &nbsp;  
 
+## 7. Lists and Non-null
 
+* Object types, scalars, and enums are the only kinds of types you can define in GraphQL.
+* you can apply additional ***type modifiers*** that affect validation of those values
 
+```
+type Character {
+	# server always expects to return a non-null value for this field
+	name: String!
+	appearsIn: [Episode]!
+}
 
+// Non-Null type modifier can also be used when defining arguments for a field
+query DroidById($id: ID!) {
+  droid(id: $id) {
+    name
+  }
+}
 
+// variables
+{
+  "id": null // invalid
+}
+```
 
+```
+// list can be null, but no null members
+myField: [String!]
 
+myField: null // valid
+myField: [] // valid
+myField: ['a', 'b'] // valid
+myField: ['a', null, 'b'] // error
+```
 
+```
+// list can't be null, but possibly has null members
+myField: [String]!
 
+myField: null // error
+myField: [] // valid
+myField: ['a', 'b'] // valid
+myField: ['a', null, 'b'] // valid
+```
 
+&nbsp;  
 
+## 8. Interfaces
 
+* An *Interface* is an abstract type that includes a certain set of fields that a type must include to implement the interface.
+* Interfaces are useful when you want to return an object or set of objects, but those might be of several different types.
 
+```
+// any type that implements Character needs to have these exact fields
+interface Character {
+	id: ID!
+	name: String!
+	friends: [Character]
+	appearsIn: [Episode]!
+}
 
+type Human implements Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+  
+   # extra field
+  starships: [Starship]
+  totalCredits: Int
+}
 
+type Droid implements Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+  
+   # extra field
+  primaryFunction: String
+}
+```
 
+```
+query HeroForEpisode($ep: Episode!) {
+  hero(episode: $ep) {
+    name
+    
+    # query의 결과가 Human 혹은 Droid일 수 있기 때문에 inline fragment 사용
+    ... on Droid {
+      primaryFunction
+    }
+    
+    ... on Human {
+    	starships {
+    		name
+    	}
+    }
+  }
+}
+```
 
-
-
-
+&nbsp;  
 
