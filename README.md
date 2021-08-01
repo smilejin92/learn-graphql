@@ -688,3 +688,47 @@ union SearchResult = Human | Droid | Starship
 
 &nbsp;  
 
+## 10. Input types
+
+* In the GraphQL schema language, input types look exactly the same as regular object types, but with the keyword `input` instead of `type`
+* Input type is particularly valuable **in the case of mutations**, where you might want to pass in a whole object to be created.
+* The fields on an input object type can themselves refer to input object types, but you can't mix input and output types in your schema.
+* Input object types can't have arguments on their fields.
+
+```
+// input type
+input ReviewInput {
+	stars: Int!
+	commentary: String
+}
+
+// mutation
+mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
+  createReview(episode: $ep, review: $review) {
+    stars
+    commentary
+  }
+}
+
+// variables
+{
+  "ep": "JEDI",
+  "review": {
+    "stars": 5,
+    "commentary": "This is a great movie!"
+  }
+}
+
+// data (returned after mutation)
+{
+  "data": {
+    "createReview": {
+      "stars": 5,
+      "commentary": "This is a great movie!"
+    }
+  }
+}
+```
+
+&nbsp;  
+
