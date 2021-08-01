@@ -626,3 +626,65 @@ query HeroForEpisode($ep: Episode!) {
 
 &nbsp;  
 
+## 9. Union types
+
+* Union types are very similar to interfaces, but they don't get to specify any common fields between the types.
+* members of a union type need to be concrete object types; **you can't create a union type out of interfaces or other unions.**
+* if you query a field that returns the union type, you need to use an inline fragment to be able to query any fields at all
+* The `__typename` field resolves to a `String` which lets you differentiate different data types from each other on the client.
+
+```
+// union type
+union SearchResult = Human | Droid | Starship
+
+// query union type - SearchResult
+{
+  search(text: "an") {
+  	# if types share a common interface, you can query their common fields
+  	# in one place rather than having to repeat the same fields across
+  	# multiple types - Human, Droid has common field "name"
+		__typename
+    ... on Character {
+      name
+    }
+    __typename
+    ... on Human {
+      height
+    }
+    ... on Droid {
+      primaryFunction
+    }
+    # starship does not implement a Character, so "name" must be specified.
+    ... on Starship {
+      name
+      length
+    }
+  }
+}
+
+// data
+{
+  "data": {
+    "search": [
+      {
+        "__typename": "Human",
+        "name": "Han Solo",
+        "height": 1.8
+      },
+      {
+        "__typename": "Human",
+        "name": "Leia Organa",
+        "height": 1.5
+      },
+      {
+        "__typename": "Starship",
+        "name": "TIE Advanced x1",
+        "length": 9.2
+      }
+    ]
+  }
+}
+```
+
+&nbsp;  
+
